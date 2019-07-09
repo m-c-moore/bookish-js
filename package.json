@@ -1,0 +1,9 @@
+{
+    "scripts": {
+    "start": "npm run build && node ./dist/index.js",
+    "build": "npm run build-ts && npm run build-babel",
+    "build-ts": "tsc",
+    "build-babel": "babel ./built --out-dir dist/ --copy-files",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
