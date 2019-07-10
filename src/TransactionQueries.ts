@@ -40,7 +40,9 @@ export default class TransactionQueries extends Queries {
                 arrayUnavailable.push({'userID':currentUserTransaction.userid,
                                        'dueDate':currentUserTransaction.duedate});
                 countAvailable --;                  
-            } catch {}        
+            } catch (e) {
+                continue; // need to suppress error
+            }        
         }
 
         return {'numberAvailable':countAvailable,

@@ -37,7 +37,9 @@ export default class TransactionQueries extends Queries {
                         'dueDate': currentUserTransaction.duedate });
                     countAvailable--;
                 }
-                catch (_a) { }
+                catch (e) {
+                    return null; // need to suppress error
+                }
             }
             return { 'numberAvailable': countAvailable,
                 'arrayUnavailable': arrayUnavailable };
