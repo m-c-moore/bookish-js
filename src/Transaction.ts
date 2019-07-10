@@ -1,4 +1,11 @@
 export default class Transaction {
+    id: number;
+    copyID: string;
+    userID: string;
+    dateBorrowed: Date;
+    dateDue: Date;
+    dateReturned: Date;
+
     constructor(id) {
         this.id = id;
     }

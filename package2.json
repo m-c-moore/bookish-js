@@ -1,0 +1,17 @@
+{
+    "scripts": {
+        "start": "npm run build && node ./dist/index.js",
+        "build": "npm run build-ts && npm run build-babel",
+        "build-ts": "tsc",
+        "build-babel": "babel ./built --out-dir dist/ --copy-files",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.3",
+        "babel-preset-env": "^1.7.0",
+        "express": "^4.17.1",
+        "pg-promise": "^8.7.3",
+        "typescript": "^3.5.3"
+    }
+}

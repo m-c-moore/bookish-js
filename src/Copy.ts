@@ -1,6 +1,9 @@
 import Transaction from './Transaction';
 
 export default class Copy {
+    id: number;
+    bookID: number;
+
     constructor(id, book) {
         this.id     = id;
         this.bookID = book.id;
