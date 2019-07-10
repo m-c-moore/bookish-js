@@ -1,3 +1,5 @@
+import Queries from './Queries';
+
 export default class Book {
     id: number;
     title: string;
@@ -11,7 +13,7 @@ export default class Book {
         this.isbn   = isbn;
     }
 
-    countAvailableCopies () {
+    static countAvailableCopies = async (bookID) => {
         console.log('... / ... copies available');
     }
 }

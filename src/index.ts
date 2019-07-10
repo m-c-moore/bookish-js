@@ -1,25 +1,35 @@
 /*import express from 'express';
 const app = express();
 const port = 3000;*/
+import {IMain, IDatabase} from 'pg-promise';
+import pgPromise from 'pg-promise';
+
+const connectionString: string = 'postgres://bookish:bookish@localhost:5432/Bookish';
+const pgp: IMain               = pgPromise({});
+const db: IDatabase<any>       = pgp(connectionString);
+
+
+
+
 
 import Queries from './Queries';
-import Book from './Book';
-import User from './User';
-import Copy from './Copy';
-import Transaction from './Transaction';
+import BookQueries from './BookQueries';
+import TransactionQueries from './TransactionQueries'
+import CopyQueries from './CopyQueries';
 
-/*
-const book = new Book(123, 'title', 'author', 'isbn');
-const user = new User(678,'uname','matt','mypassword');
-const copy = new Copy(456, book);
-const transaction = new Transaction(999);
-transaction.recordBorrow(copy, user, new Date('11/15/2018'), new Date('12/14/2019'));
+const queries   = new Queries(db);
+const bookQuery = new BookQueries(db);
+const copyQuery = new CopyQueries(db);
+const transactionQuery = new TransactionQueries(db);
 
-console.log(book, user, copy, transaction);
-*/
+const runner = async () => {
+    const Promise1 = transactionQuery.getBookAvailability(101);
+    //const Promise2 = bookQuery.getBookByTitle('Clean');
 
-const queries = new Queries();
-const queryString = queries.makeSelectString('LIBRARY_USER', 'username', "password = 'qwerty'");
-console.log(queryString);
-const result = queries.makeQueryForOne(queryString);
-console.log(queries);
+    bookQuery.printBooks(await Promise1);
+    //bookQuery.printBooks(await Promise2);
+}
+
+runner()
+//transactionQuery.getCurrentUserBooks(1);
+//console.log(result);
