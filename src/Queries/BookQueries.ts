@@ -1,5 +1,5 @@
 import Queries from './Queries'
-import Book from './Book';
+import Book from '../Models/Book';
 
 export default class BookQueries extends Queries {
 
@@ -39,13 +39,15 @@ export default class BookQueries extends Queries {
 
     getAllBooks = async () => {
         const queryString: string = this.makeSelectString('BOOK', '*', 'id IS NOT NULL');
-        return await this.getBooks(queryString);
+        return this.getBooks(queryString); //didn't need awaits because last line in function
     }
 
     getBookByTitle = async (title) => {
         const queryString: string = this.makeSelectString('BOOK', '*', `title LIKE '%${title}%'`);
-        return await this.getBooks(queryString);
+        return this.getBooks(queryString);
     }
+
+    //repositry name versus query and making a repositries directory
 
     getBookByAuthor = async (author) => {
         const queryString: string = this.makeSelectString('BOOK', '*', `author LIKE '%${author}%'`);

@@ -1,6 +1,6 @@
 import Queries from './Queries'
-import Copy from './Copy';
-import Book from './Book';
+import Copy from '../Models/Copy';
+import Book from '../Models/Book';
 import BookQueries from './BookQueries';
 
 

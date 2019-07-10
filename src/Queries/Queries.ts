@@ -1,6 +1,6 @@
 import {IMain, IDatabase} from 'pg-promise';
 import pgPromise from 'pg-promise';
-import Book from './Book';
+import Book from '../Models/Book';
 
 export default class Queries {
     db: IDatabase<any>;

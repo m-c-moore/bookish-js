@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node ./dist/index.js",
+    "start": "node app.js && npm run build && node ./dist/index.js",
     "build": "npm run build-ts && npm run build-babel",
     "build-ts": "tsc",
     "build-babel": "babel ./built --out-dir dist/ --copy-files",
@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/node": "^12.6.2",
     "express": "^4.17.1",
+    "passport-local": "^1.0.0",
     "pg-promise": "^8.7.3"
   }
 }

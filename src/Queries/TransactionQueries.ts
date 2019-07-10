@@ -1,7 +1,7 @@
 import Queries from './Queries'
-import Transaction from './Transaction';
-import Copy from './Copy';
-import Book from './Book';
+import Transaction from '../Models/Transaction';
+import Copy from '../Models/Copy';
+import Book from '../Models/Book';
 import CopyQueries from './CopyQueries';
 
 

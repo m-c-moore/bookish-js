@@ -1,4 +1,4 @@
-import Queries from './Queries';
+import Queries from '../Queries/Queries';
 
 export default class Book {
     id: number;
