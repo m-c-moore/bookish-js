@@ -8,7 +8,6 @@ export default class PassportPG {
         const user = { 'username': username,
             'password': password };
         const token = jwt.sign(user, 'our_secret');
-        console.log(token);
         return token;
     }
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="utf-8">
+        <title>Login</title>
+    <link rel="import" href="layout.html">
+    <script src="makeHTTPRequest.js"></script>
+   
+</head>
+    <body>
+        <div id="nav-placeholder"></div>
+        <div class="container jumbotron">
+            <form action="javascript:void(0)" onsubmit="submitSearch();" id="searchForm" class="form-inline col-md-">
+                <div class="input-group">
+                        <div class="form-group">
+                                <select class="form-control" id="search-type">
+                                <option>By title</option>
+                                <option>By author</option>
+                                <option>By ISBN</option>
+                                </select>
+                            </div>
+                        </div>
+                <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Search term">
+                <button type="submit" class="btn btn-primary form-control">Submit</button>
+            </form>
+            <br><br>
+            <div id="results" class="container row">
+                <div class="col-mx-auto">
+                    <ul class="list-group">
+                        <li class="list-group-item active h3">Example stop 1</li>
+                        <li class="list-group-item list-group-item-action">2 minutes: 123 to Example Street</li>
+                        <li class="list-group-item list-group-item-action">3 minutes: 456 to Fantasy Land</li>
+                    </ul>
+                </div>       
+            </div>
+        </div>
+    </body>
+</html>

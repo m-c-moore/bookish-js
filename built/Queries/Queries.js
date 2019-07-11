@@ -6,6 +6,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import pgPromise from 'pg-promise';
 export default class Queries {
     constructor(db) {
         this.makeQuery = (queryString, singleItem = false) => __awaiter(this, void 0, void 0, function* () {
@@ -30,6 +31,12 @@ export default class Queries {
             return result;
         });
         this.db = db;
+    }
+    static createDB() {
+        const connectionString = 'postgres://bookish:bookish@localhost:5432/Bookish';
+        const pgp = pgPromise({});
+        const db = pgp(connectionString);
+        return db;
     }
     makeSelectString(table, value, condition) {
         const queryString = `SELECT ${value} FROM ${table} WHERE ${condition};`;

@@ -6,14 +6,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-export default class Book {
-    constructor(id, title, author, isbn) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.isbn = isbn;
+import Queries from './Queries';
+export default class UserQueries extends Queries {
+    constructor(db) {
+        super(db);
+        this.getAllUsers = () => __awaiter(this, void 0, void 0, function* () {
+            const queryString = this.makeSelectString('LIBRARY_USER', '*', `id IS NOT NULL`);
+            const users = yield this.makeQuery(queryString);
+            return users;
+        });
     }
 }
-Book.countAvailableCopies = (bookID) => __awaiter(this, void 0, void 0, function* () {
-    console.log('... / ... copies available');
-});

@@ -9,6 +9,13 @@ export default class Queries {
         this.db = db;
     }
 
+    static createDB() {
+        const connectionString: string = 'postgres://bookish:bookish@localhost:5432/Bookish';
+        const pgp: IMain               = pgPromise({});
+        const db: IDatabase<any>       = pgp(connectionString);
+        return db;
+    }
+
     makeQuery = async (queryString, singleItem = false) => {
         try {
             let data : any;

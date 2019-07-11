@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js && npm run build && node ./dist/index.js",
+    "start": "npm run build && node app.js && node ./dist/index.js",
     "build": "npm run build-ts && npm run build-babel",
     "build-ts": "tsc",
     "build-babel": "babel ./built --out-dir dist/ --copy-files",
@@ -28,7 +28,14 @@
   },
   "dependencies": {
     "@types/node": "^12.6.2",
+    "body-parser": "^1.19.0",
+    "connect-ensure-login": "^0.1.1",
+    "ejs": "^2.6.2",
     "express": "^4.17.1",
+    "express-session": "^1.16.1",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg-promise": "^8.7.3"
   }

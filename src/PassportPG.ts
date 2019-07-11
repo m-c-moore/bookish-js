@@ -1,14 +1,17 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
+
 export default class PassportPG {
-    constructor() { }
+    constructor() {}
+
     static generateToken(username, password) {
-        const user = { 'username': username,
-            'password': password };
-        const token = jwt.sign(user, 'our_secret');
-        console.log(token);
+        const user = {'username':username,
+                      'password':password}
+        
+        const token = jwt.sign(user, 'our_secret')
         return token;
     }
 }
+

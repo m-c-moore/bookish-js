@@ -7,7 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="authenticateUser.js"></script>
+    <script src="./authenticateUser.js" type="module"></script>
 </head>
     <body>
         <div id="nav-div">
@@ -24,16 +24,6 @@
         </div>
     </body>
     <div id="nav-placeholder"></div>
-
-    <div class="container jumbotron">
-        <div class="container row justify-content-md-center">
-            <form action="javascript:void(0)" onsubmit="submitCredentials();" id="loginForm" class="form-inline col-md-">
-                <input class="form-control mr-sm-2" type="text" name="username" placeholder="Username">
-                <input class="form-control mr-sm-2" type="text" name="password" placeholder="Password">
-                <button type="submit" class="btn btn-primary form-control">Login</button>
-            </form>
-        </div>
-    </div>
 
     <script>
         var template = document.querySelector('link[rel="import"]').import;
