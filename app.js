@@ -34,7 +34,31 @@ app.get('/loginrequest/', async (request, response) => {
 	
 });
 
+var JwtStrategy = require('passport-jwt').Strategy,
+    ExtractJwt = require('passport-jwt').ExtractJwt;
+var opts = {'jwtFromRequest': ExtractJwt.fromAuthHeaderAsBearerToken(),
+			'secretOrKey' : 'our_secret',
+			'issuer' : 'accounts.examplesoft.com',
+			'audience' : 'yoursite.net',
+			'usernameField': 'username',
+			'passwordField': 'password'};
+
+passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
+    User.findOne({id: jwt_payload.sub}, function(err, user) {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
+            return done(null, user);
+        } else {
+            return done(null, false);
+            // or you could create a new account
+        }
+    });
+}));
+
 app.get('/booksearch/', async (request, response) => {
+//app.get('/booksearch/', passport.authenticate('jwt'), async (request, response) => {
 
 	const searchType = request.query.type;
 	const searchTerm = request.query.term;
@@ -60,49 +84,9 @@ app.get('/booksearch/', async (request, response) => {
 	}
 });
 
-//serve frontend directory
-//app.use('/', require('./dist/Queries/Queries.js').default);
-//app.use('/', require('./dist/Queries/UserQueries.js').default);
 app.use(express.static('dist/frontend'));
 
-passport.authenticate('local', { failureFlash: 'Invalid username or password.' });
-passport.authenticate('local', { successFlash: 'Welcome!' });
+passport.authenticate('jwt', { failureFlash: 'Invalid username or password.' });
+passport.authenticate('jwt', { successFlash: 'Welcome!' });
 
-/*
-passport.use(new Strategy(
-	function(username, password, cb) {
-		database.users.findByUsername(username, function(err, user) {
-			if (err) { return cb(err); }
-			if (!user) { return cb(null, false); }
-			if (user.password != password) { return cb(null, false); }
-			return cb(null, user);
-		});
-	}));
-
-passport.serializeUser(function(user, cb) {
-	cb(null, user.id);
-});
-
-passport.deserializeUser(function(id, cb) {
-	database.users.findById(id, function (err, user) {
-		if (err) { return cb(err); }
-		cb(null, user);
-	});
-});
-*/
-
-
-/*
-
-// Use application-level middleware for common functionality, including
-// logging, parsing, and session handling.
-app.use(require('morgan')('combined'));
-app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
-
-// Initialize Passport and restore authentication state, if any, from the
-// session.
-app.use(passport.initialize());
-app.use(passport.session());
-*/
 app.listen(3000, () => console.log(`Example app listening on port 3000!`))

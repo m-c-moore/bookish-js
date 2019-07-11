@@ -14,23 +14,23 @@ function submitCredentials() {
         var token = JSON.parse(xhttp.response).token;
         window.sessionStorage.setItem('token', token);
         var txt = `<div id="nav-placeholder"></div>
-                    <div class="container jumbotron col-mx-aut">
-                    <form action="javascript:void(0)" onsubmit="submitSearch();" id="searchForm" class="form-inline col-md-">
-                    <div class="input-group">
-                <div class="form-group">
-                                                    <select class="form-control" id="search-type">
-                    <option>Title</option>
-                        <option>Author</option>
-                        </select>
-                    </div>
-                            </div>
-        <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Leave blank for all">
-        <button type="submit" class="btn btn-primary form-control">Submit</button>
+                        <div class="container jumbotron col-mx-aut">
+                            <form action="javascript:void(0)" onsubmit="submitSearch();" id="searchForm" class="form-inline col-md-">
+                                <div class="input-group">
+                                    <div class="form-group">
+                                        <select class="form-control" id="search-type">
+                                            <option>Title</option>
+                                            <option>Author</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Leave blank for all">
+                                <button type="submit" class="btn btn-primary form-control">Submit</button>
                             </form>
                             <br><br>
                             <div id="results" class="container row"></div>       
-                            </div>
-                        </div>`;
+                        </div>
+                    </div>`;
         document.body.innerHTML = txt;
     };
     xhttp.send();
@@ -44,7 +44,7 @@ function submitSearch() {
     xhttp.open('GET', searchString, true);
     var token = window.sessionStorage.getItem('token');
     xhttp.setRequestHeader('Content-Type', 'application/json');
-    xhttp.setRequestHeader('Authorization', 'Bearer' + token);
+    xhttp.setRequestHeader('Authorization', 'Bearer ' + token);
     xhttp.onload = function () {
         // Handle response here using e.g. xhttp.status, xhttp.response, xhttp.responseText
         if (xhttp.status == 404) {
