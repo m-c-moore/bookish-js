@@ -14,22 +14,21 @@ function submitCredentials() {
         var token = JSON.parse(xhttp.response).token;
         window.sessionStorage.setItem('token', token);
         var txt = `<div id="nav-placeholder"></div>
-                        <div class="container jumbotron col-mx-aut">
-                            <form action="javascript:void(0)" onsubmit="submitSearch();" id="searchForm" class="form-inline col-md-">
-                                <div class="input-group">
-                                    <div class="form-group">
-                                        <select class="form-control" id="search-type">
-                                            <option>Title</option>
-                                            <option>Author</option>
-                                        </select>
-                                    </div>
+                    <div class="container jumbotron col-mx-aut">
+                        <form action="javascript:void(0)" onsubmit="submitSearch();" id="searchForm" class="form-inline col-md-">
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <select class="form-control" id="search-type">
+                                        <option>Title</option>
+                                        <option>Author</option>
+                                    </select>
                                 </div>
-                                <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Leave blank for all">
-                                <button type="submit" class="btn btn-primary form-control">Submit</button>
-                            </form>
-                            <br><br>
-                            <div id="results" class="container row"></div>       
-                        </div>
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Leave blank for all">
+                            <button type="submit" class="btn btn-primary form-control">Submit</button>
+                        </form>
+                        <br><br>
+                        <div id="results" class="container row"></div>       
                     </div>`;
         document.body.innerHTML = txt;
     };

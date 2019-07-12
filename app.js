@@ -9,6 +9,9 @@ const BookQueries = require('./dist/Queries/BookQueries').default;
 const AuthQueries = require('./dist/Queries/AuthQueries').default;
 
 var app = express();
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 const db = Queries.createDB()
 const bookQuery = new BookQueries(db);
@@ -38,27 +41,35 @@ var JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
 var opts = {'jwtFromRequest': ExtractJwt.fromAuthHeaderAsBearerToken(),
 			'secretOrKey' : 'our_secret',
-			'issuer' : 'accounts.examplesoft.com',
-			'audience' : 'yoursite.net',
 			'usernameField': 'username',
 			'passwordField': 'password'};
 
-passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
-        if (err) {
-            return done(err, false);
-        }
-        if (user) {
-            return done(null, user);
-        } else {
-            return done(null, false);
-            // or you could create a new account
-        }
-    });
+passport.use(new JwtStrategy(opts, async (user, done) => {
+	try {
+		const validCredentials = await authQuery.validateCredentials(user.username, user.password)
+		if (validCredentials === true) {
+			console.log('========Verified==========')
+			return done(null, user);
+		} else {
+			return done(null, false);
+		}
+	} catch (e) {
+		return done(e, false);
+	}
 }));
 
-app.get('/booksearch/', async (request, response) => {
-//app.get('/booksearch/', passport.authenticate('jwt'), async (request, response) => {
+passport.serializeUser(function(user, done) {
+	done(null, user.username);
+});
+
+passport.deserializeUser(async (username, done) => {
+	await authQuery.validateCredentials(username, function(err, user) {
+		done(err, user);
+	});
+});
+
+//app.get('/booksearch/', async (request, response) => {
+app.get('/booksearch/', passport.authenticate('jwt'), async (request, response) => {
 
 	const searchType = request.query.type;
 	const searchTerm = request.query.term;
