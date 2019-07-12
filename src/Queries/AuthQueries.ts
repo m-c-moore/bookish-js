@@ -18,8 +18,7 @@ export default class AuthQueries extends Queries {
     }
 
     validateCredentials = async (username, password) => {
-        const correctPassword :string = await this.getPasswordFromUserName(username);
-        console.log(correctPassword);
+        const correctPassword :string = await this.getPasswordFromUserName(username);      
         
         if (password === correctPassword) {
             return true;

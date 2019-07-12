@@ -8,8 +8,8 @@ function submitCredentials() {
     xhttp.setRequestHeader('Content-Type', 'application/json');
     xhttp.onload = function () {
         // Handle response here using e.g. xhttp.status, xhttp.response, xhttp.responseText
-        if (xhttp.status == 404) {
-            alert("Invalid login\n" + searchString);
+        if (xhttp.status == 401) {
+            alert('Invalid username or password');
         }
         var token = JSON.parse(xhttp.response).token;
         window.sessionStorage.setItem('token', token);
@@ -48,6 +48,10 @@ function submitSearch() {
         // Handle response here using e.g. xhttp.status, xhttp.response, xhttp.responseText
         if (xhttp.status == 404) {
             alert("Invalid search. Try Again!\n" + searchString);
+        }
+        else if (xhttp.status == 401) {
+            alert('Unauthorised: Pres OK to refresh');
+            window.location.reload(true);
         }
         var bookJSON = JSON.parse(xhttp.response);
         var resultsHTML = createResultsHTML(bookJSON);

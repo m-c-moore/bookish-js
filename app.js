@@ -25,16 +25,16 @@ app.get('/loginrequest/', async (request, response) => {
   
 	try {
 		authenticated = await authQuery.validateCredentials(username, password);
+	} catch {
+		response.sendStatus(401);
 	}
-	catch{
-		response.sendStatus(404);
-	}
+
 	if (authenticated === true) {
 		const token = PassportPG.generateToken(username, password);
 		response.json({'token':token});
-		console.log(token);
+	} else {
+		response.sendStatus(401);
 	}
-	
 });
 
 var JwtStrategy = require('passport-jwt').Strategy,
@@ -48,7 +48,6 @@ passport.use(new JwtStrategy(opts, async (user, done) => {
 	try {
 		const validCredentials = await authQuery.validateCredentials(user.username, user.password)
 		if (validCredentials === true) {
-			console.log('========Verified==========')
 			return done(null, user);
 		} else {
 			return done(null, false);
@@ -89,15 +88,11 @@ app.get('/booksearch/', passport.authenticate('jwt'), async (request, response) 
 			bookJSON[book.id] = book;
 		}
 		response.json(bookJSON);
-	}
-	catch{
-		response.sendStatus(404);
+	} catch {
+		response.sendStatus(401);
 	}
 });
 
 app.use(express.static('dist/frontend'));
-
-passport.authenticate('jwt', { failureFlash: 'Invalid username or password.' });
-passport.authenticate('jwt', { successFlash: 'Welcome!' });
 
 app.listen(3000, () => console.log(`Example app listening on port 3000!`))

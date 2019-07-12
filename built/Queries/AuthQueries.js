@@ -23,7 +23,6 @@ export default class AuthQueries extends Queries {
         });
         this.validateCredentials = (username, password) => __awaiter(this, void 0, void 0, function* () {
             const correctPassword = yield this.getPasswordFromUserName(username);
-            console.log(correctPassword);
             if (password === correctPassword) {
                 return true;
             }
