@@ -3,8 +3,8 @@ import Book from '../Models/Book';
 
 export default class BookQueries extends Queries {
 
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
     }
 
     getBookDetails = async (bookID) => {

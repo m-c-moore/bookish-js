@@ -1,3 +1,19 @@
+var txt = `<div class="container jumbotron col-mx-auto">
+                <form action="javascript:void(0)" onsubmit="submitSearch();" id="searchForm" class="form-inline col-md-">
+                    <div class="input-group">
+                            <div class="form-group">
+                                <select class="form-control" id="search-type">
+                                <option>Title</option>
+                                <option>Author</option>
+                                </select>
+                            </div>
+                    </div>
+                    <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Leave blank for all">
+                    <button type="submit" class="btn btn-primary form-control">Submit</button>
+                </form>
+                <br><br>
+                <div id="results" class="container row"></div>       
+            </div>`;
 function submitCredentials() {
     var xhttp = new XMLHttpRequest();
     var username = document.forms[0][0].value;
@@ -12,11 +28,7 @@ function submitCredentials() {
         }
         var token = JSON.parse(xhttp.response).token;
         window.sessionStorage.setItem('token', token);
-        var txt = `<div class="container jumbotron">
-        <div id="our-content" class="container row justify-content-md-center">
-            <object data="search.html"></object>
-        </div>
-    </div>`;
+        //var txt = `<object id="obj" data="search.html" height="" width =""></object>`;
         document.body.innerHTML = txt;
     };
     xhttp.send();

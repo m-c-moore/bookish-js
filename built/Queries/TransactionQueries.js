@@ -9,13 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import Queries from './Queries';
 import CopyQueries from './CopyQueries';
 export default class TransactionQueries extends Queries {
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
         this.getCurrentUserBooks = (userID) => __awaiter(this, void 0, void 0, function* () {
             const queryString = this.makeSelectString('TRANSACTIONS', '*', `userid = ${userID} AND datereturned IS NULL`);
             const currentUserTransaction = yield this.makeQuery(queryString);
             const bookArray = [];
-            const copyQuery = new CopyQueries(this.db);
+            const copyQuery = new CopyQueries(this.connection);
             for (let transaction of currentUserTransaction) {
                 let book = yield copyQuery.getBookDetails(transaction.copyid);
                 bookArray.push({ 'Book': book,
@@ -25,7 +25,7 @@ export default class TransactionQueries extends Queries {
             return bookArray;
         });
         this.getBookAvailability = (bookID) => __awaiter(this, void 0, void 0, function* () {
-            const copyQuery = new CopyQueries(this.db);
+            const copyQuery = new CopyQueries(this.connection);
             const copyIDArray = yield copyQuery.getAllCopies(bookID);
             let countAvailable = copyIDArray.length;
             const arrayUnavailable = [];

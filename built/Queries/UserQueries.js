@@ -8,8 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import Queries from './Queries';
 export default class UserQueries extends Queries {
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
         this.getAllUsers = () => __awaiter(this, void 0, void 0, function* () {
             const queryString = this.makeSelectString('LIBRARY_USER', '*', `id IS NOT NULL`);
             const users = yield this.makeQuery(queryString);

@@ -6,15 +6,15 @@ import CopyQueries from './CopyQueries';
 
 
 export default class TransactionQueries extends Queries {
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
     }
     
     getCurrentUserBooks = async (userID) => {
         const queryString: string       = this.makeSelectString('TRANSACTIONS', '*', `userid = ${userID} AND datereturned IS NULL`);
         const currentUserTransaction: any[] = await this.makeQuery(queryString);
         const bookArray: any[] = [];
-        const copyQuery: any    = new CopyQueries(this.db);
+        const copyQuery: any    = new CopyQueries(this.connection);
 
         for (let transaction of currentUserTransaction) {
             let book: Book = await copyQuery.getBookDetails(transaction.copyid);
@@ -27,7 +27,7 @@ export default class TransactionQueries extends Queries {
     }
 
     getBookAvailability = async (bookID) => {
-        const copyQuery: any        = new CopyQueries(this.db)
+        const copyQuery: any        = new CopyQueries(this.connection)
         const copyIDArray: number[] = await copyQuery.getAllCopies(bookID)
         
         let countAvailable: number  = copyIDArray.length;

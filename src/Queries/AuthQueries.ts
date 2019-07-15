@@ -2,8 +2,8 @@ import Queries from './Queries'
 
 export default class AuthQueries extends Queries {
 
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
     }
 
     getPasswordFromUserName = async (username) => {

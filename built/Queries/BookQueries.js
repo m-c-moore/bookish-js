@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import Queries from './Queries';
 import Book from '../Models/Book';
 export default class BookQueries extends Queries {
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
         this.getBookDetails = (bookID) => __awaiter(this, void 0, void 0, function* () {
             const queryString = this.makeSelectString('BOOK', '*', `id = ${bookID}`);
             const bookRequest = yield this.makeQuery(queryString, true);

@@ -1,18 +1,48 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
+require('reflect-metadata');
 const jwt = require('jsonwebtoken')
 
 const Queries     = require('./dist/Queries/Queries').default;
 const PassportPG  = require('./dist/PassportPG').default;
 const BookQueries = require('./dist/Queries/BookQueries').default;
 const AuthQueries = require('./dist/Queries/AuthQueries').default;
+const CopyQueries = require('./dist/Queries/CopyQueries').default;
 
+/*
 var app = express();
 app.use(passport.initialize());
 app.use(passport.session());
+*/
 
 
+runner = async () => {
+	const connection = await Queries.createConnection();
+	const copyQuery = new CopyQueries(connection);
+
+	const result = await copyQuery.getAllCopies(101);
+	console.log(result);
+}
+
+runner()
+
+
+
+
+
+
+
+// && node ./dist/index.js
+
+
+
+
+
+
+
+
+/*
 const db = Queries.createDB()
 const bookQuery = new BookQueries(db);
 const authQuery = new AuthQueries(db);
@@ -96,3 +126,4 @@ app.get('/booksearch/', passport.authenticate('jwt'), async (request, response) 
 app.use(express.static('dist/frontend'));
 
 app.listen(3000, () => console.log(`Example app listening on port 3000!`))
+*/

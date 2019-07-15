@@ -3,8 +3,8 @@ import Book from '../Models/Book';
 
 export default class UserQueries extends Queries {
 
-    constructor(db) {
-        super(db);
+    constructor(connection) {
+        super(connection);
     }
 
     

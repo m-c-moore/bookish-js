@@ -3,7 +3,9 @@
         "outDir": "./built",
         "allowSyntheticDefaultImports": true,
         "target": "es6",
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     },
     "include": [
         "./src/**/*"
