@@ -6,66 +6,43 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import "reflect-metadata";
-import { createConnection } from "typeorm";
 export default class Queries {
-    constructor(connection) {
-        this.makeQuery = (queryString, singleItem = false) => __awaiter(this, void 0, void 0, function* () {
+    constructor() {
+        this.objectionQuery = (column, value, exact = true) => __awaiter(this, void 0, void 0, function* () {
             try {
-                let data;
-                if (singleItem) {
-                    //data = await this.connection.one(queryString);
+                if (exact) {
+                    const result = yield this.model.query().where(column, value);
+                    return result;
                 }
                 else {
-                    //data = await this.connection.any(queryString);
-                }
-                return data;
-            }
-            catch (e) {
-                console.log(`====${queryString}===`);
-                console.log(e);
-            }
-        });
-        this.typeORMQuery = (Copy, table, value, condition, singleItem = false) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield this.connection.getRepository('copies')
-                    .createQueryBuilder('copies')
-                    .select(); //'copies.id')
-                //.from(Copy, 'copies.id');
-                //.where('copies.bookid = :bookid',{bookid: 101})
-                //.getMany();
-                //.from(Copy, table);
-                // .where(condition)
-                // .getMany();
-                if (singleItem) {
-                    return result.getOne();
-                }
-                else {
-                    return result; //.getMany();
+                    const result = yield this.model.query().where(column, 'ilike', `%${value}%`);
+                    return result;
                 }
             }
             catch (e) {
-                console.log(`====${this.makeSelectString(Copy, value, condition)}====`);
+                console.log(`====Model: ${this.model.name}, Column: ${column}, Value: ${value}====`);
                 console.log(e.message);
             }
         });
-        this.connection = connection;
-    }
-    /*awaitQuery = async (queryString, singleItem = false) => {
-        const Model = this.sequelize.Model;
-        const
-        
-        const result : any = await this.makeQuery(queryString, singleItem);
-        console.log(result);
-        return result;
-    }*/
-    makeSelectString(table, value, condition) {
-        const queryString = `SELECT ${value} FROM ${table} WHERE ${condition};`;
-        return queryString;
+        this.objectionFullQuery = (conditionArray) => __awaiter(this, void 0, void 0, function* () {
+            let queryString = 'this.model.query()';
+            try {
+                for (let condition of conditionArray) {
+                    if (condition.value === 'NULL') {
+                        queryString += `.whereNull('${condition.column}')`;
+                    }
+                    else {
+                        queryString += `.where('${condition.column}', '${condition.operator}', '${condition.value}')`;
+                    }
+                }
+                const result = yield eval(queryString);
+                return result;
+            }
+            catch (e) {
+                console.log(`====Query string: ${queryString}====`);
+                console.log(e.message);
+            }
+        });
+        this.model = undefined;
     }
 }
-Queries.createConnection = () => __awaiter(this, void 0, void 0, function* () {
-    const connectionString = 'postgres://bookish:bookish@localhost:5432/Bookish';
-    const connection = yield createConnection({ type: 'postgres', url: connectionString });
-    return connection;
-});

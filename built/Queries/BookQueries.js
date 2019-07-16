@@ -8,39 +8,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import Queries from './Queries';
 import Book from '../Models/Book';
+import OBook from '../Models/Objection/OBook';
 export default class BookQueries extends Queries {
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
         this.getBookDetails = (bookID) => __awaiter(this, void 0, void 0, function* () {
-            const queryString = this.makeSelectString('BOOK', '*', `id = ${bookID}`);
-            const bookRequest = yield this.makeQuery(queryString, true);
-            const book = new Book(bookRequest.id, bookRequest.title, bookRequest.author, bookRequest.isbn);
-            //console.log(book);
+            const bookRequest = yield this.objectionQuery('id', bookID);
+            const book = new Book(bookRequest[0].id, bookRequest[0].title, bookRequest[0].author, bookRequest[0].isbn, bookRequest[0].embedref);
             return book;
         });
-        this.getBooks = (queryString) => __awaiter(this, void 0, void 0, function* () {
-            const bookArrayRequest = yield this.makeQuery(queryString);
+        this.getBooks = (bookArrayRequest) => {
             const bookArray = [];
             for (let bookR of bookArrayRequest) {
-                const book = new Book(bookR.id, bookR.title, bookR.author, bookR.isbn);
+                const book = new Book(bookR.id, bookR.title, bookR.author, bookR.isbn, bookR.embedref);
                 bookArray.push(book);
             }
             bookArray.sort((a, b) => a.title.localeCompare(b.title));
             return bookArray;
-        });
+        };
         this.getAllBooks = () => __awaiter(this, void 0, void 0, function* () {
-            const queryString = this.makeSelectString('BOOK', '*', 'id IS NOT NULL');
-            return this.getBooks(queryString); //didn't need awaits because last line in function
+            const bookArrayRequest = yield this.model.query();
+            return this.getBooks(bookArrayRequest); //didn't need awaits because last line in function
         });
         this.getBookByTitle = (title) => __awaiter(this, void 0, void 0, function* () {
-            const queryString = this.makeSelectString('BOOK', '*', `title LIKE '%${title}%'`);
-            return this.getBooks(queryString);
+            const bookArrayRequest = yield this.objectionQuery('title', title, false);
+            return this.getBooks(bookArrayRequest);
         });
-        //repositry name versus query and making a repositries directory
         this.getBookByAuthor = (author) => __awaiter(this, void 0, void 0, function* () {
-            const queryString = this.makeSelectString('BOOK', '*', `author LIKE '%${author}%'`);
-            return yield this.getBooks(queryString);
+            const bookArrayRequest = yield this.objectionQuery('author', author, false);
+            return yield this.getBooks(bookArrayRequest);
         });
+        this.model = OBook;
     }
     printBooks(bookArray) {
         console.log(bookArray);

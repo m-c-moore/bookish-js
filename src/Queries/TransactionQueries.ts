@@ -1,46 +1,50 @@
 import Queries from './Queries'
-import Transaction from '../Models/Transaction';
-import Copy from '../Models/Copy';
 import Book from '../Models/Book';
 import CopyQueries from './CopyQueries';
 
+import OTransaction from '../Models/Objection/OTransaction';
+
 
 export default class TransactionQueries extends Queries {
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
+        this.model = OTransaction;
     }
     
     getCurrentUserBooks = async (userID) => {
-        const queryString: string       = this.makeSelectString('TRANSACTIONS', '*', `userid = ${userID} AND datereturned IS NULL`);
-        const currentUserTransaction: any[] = await this.makeQuery(queryString);
+        const conditionsArray = [{'column':'userid', 'operator':'=', 'value':userID},
+                                 {'column':'datereturned', 'operator':'=', 'value':'NULL'}];
+
+        const currentUserTransaction: any[] = await this.objectionFullQuery(conditionsArray);
+
         const bookArray: any[] = [];
-        const copyQuery: any    = new CopyQueries(this.connection);
+        const copyQuery: any   = new CopyQueries();
 
         for (let transaction of currentUserTransaction) {
             let book: Book = await copyQuery.getBookDetails(transaction.copyid);
 
-            bookArray.push({'Book':book,
-                            'Due date':transaction.duedate});
+            bookArray.push({'Book':book, 'Due date':transaction.duedate});
         }
-        console.log(bookArray);
         return bookArray;
     }
 
     getBookAvailability = async (bookID) => {
-        const copyQuery: any        = new CopyQueries(this.connection)
-        const copyIDArray: number[] = await copyQuery.getAllCopies(bookID)
+        const copyQuery: any        = new CopyQueries();
+        const copyIDArray: number[] = await copyQuery.getAllCopies(bookID);
         
-        let countAvailable: number  = copyIDArray.length;
+        let countAvailable: number    = copyIDArray.length;
         const arrayUnavailable: any[] = [];
 
         for (let copyID of copyIDArray) {
-            const queryString: string       = this.makeSelectString('TRANSACTIONS', '*', `copyid = ${copyID} AND datereturned IS NULL`);
+            const conditionsArray = [{'column':'copyid', 'operator':'=', 'value':copyID},
+                                     {'column':'datereturned', 'operator':'=', 'value':'NULL'}];
             try {
-                const currentUserTransaction: any = await this.makeQuery(queryString, true);
-                arrayUnavailable.push({'userID':currentUserTransaction.userid,
-                                       'dueDate':currentUserTransaction.duedate});
+                const currentUserTransaction: any = await this.objectionFullQuery(conditionsArray);
+                arrayUnavailable.push({'userID':currentUserTransaction[0].userid,
+                                       'dueDate':currentUserTransaction[0].duedate});
                 countAvailable --;                  
             } catch (e) {
+                console.log(e.message);
                 continue; // need to suppress error
             }        
         }

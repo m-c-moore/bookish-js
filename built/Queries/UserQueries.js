@@ -7,13 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import Queries from './Queries';
+import OUser from '../Models/Objection/OUser';
 export default class UserQueries extends Queries {
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
         this.getAllUsers = () => __awaiter(this, void 0, void 0, function* () {
-            const queryString = this.makeSelectString('LIBRARY_USER', '*', `id IS NOT NULL`);
-            const users = yield this.makeQuery(queryString);
+            const users = yield this.model.query();
             return users;
         });
+        this.model = OUser;
     }
 }

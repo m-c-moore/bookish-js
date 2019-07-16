@@ -1,17 +1,15 @@
 import Queries from './Queries'
-import Book from '../Models/Book';
+import OUser from '../Models/Objection/OUser';
 
 export default class UserQueries extends Queries {
 
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
+        this.model = OUser;
     }
 
-    
-
     getAllUsers = async () => {
-        const queryString: string = this.makeSelectString('LIBRARY_USER', '*', `id IS NOT NULL`);
-        const users: any[] = await this.makeQuery(queryString);
+        const users: any[] = await this.model.query();
         return users;
     }
 }

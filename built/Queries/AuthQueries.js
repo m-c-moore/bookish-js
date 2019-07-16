@@ -7,14 +7,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import Queries from './Queries';
+import OUser from '../Models/Objection/OUser';
 export default class AuthQueries extends Queries {
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
         this.getPasswordFromUserName = (username) => __awaiter(this, void 0, void 0, function* () {
-            const queryString = this.makeSelectString('LIBRARY_USER', 'password', `username = '${username}'`);
             try {
-                const password = yield this.makeQuery(queryString, true);
-                return password.password;
+                const user = yield this.objectionQuery('username', username);
+                const password = user[0].password;
+                return password;
             }
             catch (e) {
                 console.log(e.message);
@@ -28,5 +29,6 @@ export default class AuthQueries extends Queries {
             }
             return false;
         });
+        this.model = OUser;
     }
 }

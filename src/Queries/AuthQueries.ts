@@ -1,16 +1,18 @@
 import Queries from './Queries'
+import OUser from '../Models/Objection/OUser';
 
 export default class AuthQueries extends Queries {
 
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
+        this.model = OUser;
     }
 
     getPasswordFromUserName = async (username) => {
-        const queryString: string = this.makeSelectString('LIBRARY_USER', 'password', `username = '${username}'`);
         try {
-            const password: any = await this.makeQuery(queryString, true);
-            return password.password;
+            const user: any = await this.objectionQuery('username', username);
+            const password  = user[0].password;
+            return password;
         } catch (e) {
             console.log(e.message);
             return undefined;
@@ -18,7 +20,7 @@ export default class AuthQueries extends Queries {
     }
 
     validateCredentials = async (username, password) => {
-        const correctPassword :string = await this.getPasswordFromUserName(username);      
+        const correctPassword: string = await this.getPasswordFromUserName(username);      
         
         if (password === correctPassword) {
             return true;

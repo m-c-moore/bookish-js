@@ -1,57 +1,53 @@
 import Queries from './Queries'
 import Book from '../Models/Book';
+import OBook from '../Models/Objection/OBook';
 
 export default class BookQueries extends Queries {
 
-    constructor(connection) {
-        super(connection);
+    constructor() {
+        super();
+        this.model = OBook;
     }
 
     getBookDetails = async (bookID) => {
-        const queryString: string = this.makeSelectString('BOOK', '*', `id = ${bookID}`);
-        const bookRequest: any    = await this.makeQuery(queryString, true);
-
-        const book: Book = new Book(bookRequest.id,
-                                    bookRequest.title,
-                                    bookRequest.author,
-                                    bookRequest.isbn);
-
-        //console.log(book);
+        const bookRequest: any    = await this.objectionQuery('id', bookID);
+        const book: Book = new Book(bookRequest[0].id,
+                                    bookRequest[0].title,
+                                    bookRequest[0].author,
+                                    bookRequest[0].isbn,
+                                    bookRequest[0].embedref);
         return book;
     }
-    getBooks = async (queryString) => {
-        const bookArrayRequest: any[] = await this.makeQuery(queryString);
-        
+
+    getBooks = (bookArrayRequest) => {      
         const bookArray: Book[] = [];
 
         for (let bookR of bookArrayRequest) {
             const book: Book = new Book(bookR.id,
                                         bookR.title,
                                         bookR.author,
-                                        bookR.isbn);
+                                        bookR.isbn,
+                                        bookR.embedref);
 
             bookArray.push(book);
         }
         bookArray.sort((a, b) => a.title.localeCompare(b.title));
-
         return bookArray;
     }
 
     getAllBooks = async () => {
-        const queryString: string = this.makeSelectString('BOOK', '*', 'id IS NOT NULL');
-        return this.getBooks(queryString); //didn't need awaits because last line in function
+        const bookArrayRequest: any[] = await this.model.query();
+        return this.getBooks(bookArrayRequest); //didn't need awaits because last line in function
     }
 
     getBookByTitle = async (title) => {
-        const queryString: string = this.makeSelectString('BOOK', '*', `title LIKE '%${title}%'`);
-        return this.getBooks(queryString);
+        const bookArrayRequest: any[] = await this.objectionQuery('title', title, false);
+        return this.getBooks(bookArrayRequest);
     }
 
-    //repositry name versus query and making a repositries directory
-
     getBookByAuthor = async (author) => {
-        const queryString: string = this.makeSelectString('BOOK', '*', `author LIKE '%${author}%'`);
-        return await this.getBooks(queryString);
+        const bookArrayRequest: any[] = await this.objectionQuery('author', author, false);
+        return await this.getBooks(bookArrayRequest);
     }
 
     printBooks (bookArray) {

@@ -1,75 +1,40 @@
-import "reflect-metadata";
-import {IMain, IDatabase} from 'pg-promise';
-import pgPromise from 'pg-promise';
-import {createConnection, Connection, getRepository} from "typeorm";
-import {Column, PrimaryGeneratedColumn, Entity} from "typeorm";
-import {Copy} from './CopyQueries';
-
-
 export default class Queries {
-    connection: Connection;
-
-    constructor(connection) {
-        this.connection = connection;
+    model: any;
+    
+    constructor() {
+        this.model = undefined;
     }
 
-    static createConnection = async () => {
-        const connectionString: string = 'postgres://bookish:bookish@localhost:5432/Bookish';
-        const connection: Connection = await createConnection({type: 'postgres', url: connectionString});
-        return connection;
-    }
-
-    makeQuery = async (queryString, singleItem = false) => {
+    objectionQuery = async (column, value, exact = true) => {
         try {
-            let data : any;
-            if (singleItem) {
-                //data = await this.connection.one(queryString);
+            if (exact) {
+                const result = await this.model.query().where(column, value);
+                return result;
             } else {
-                //data = await this.connection.any(queryString);
-            }
-            return data;
-        
-        } catch (e) {
-            console.log(`====${queryString}===`);
-            console.log(e);
-        }
-    }
-
-    typeORMQuery = async (Copy, table, value, condition, singleItem = false) => {
-        try {
-            const result: any = await this.connection.getRepository('copies')
-                                                        .createQueryBuilder('copies')
-                                                        .select();//'copies.id')
-                                                        //.from(Copy, 'copies.id');
-                                                        //.where('copies.bookid = :bookid',{bookid: 101})
-                                                        //.getMany();
-                                                        //.from(Copy, table);
-                                                        // .where(condition)
-                                                        // .getMany();
-            if (singleItem) {
-                return result.getOne();
-            } else {
-                return result;//.getMany();
+                const result = await this.model.query().where(column, 'ilike', `%${value}%`);
+                return result;
             }
         } catch(e) {
-            console.log(`====${this.makeSelectString(Copy, value, condition)}====`);
+            console.log(`====Model: ${this.model.name}, Column: ${column}, Value: ${value}====`);
             console.log(e.message);
         }
     }
 
-    /*awaitQuery = async (queryString, singleItem = false) => {
-        const Model = this.sequelize.Model;
-        const 
-        
-        const result : any = await this.makeQuery(queryString, singleItem);
-        console.log(result);
-        return result;
-    }*/
-
-    makeSelectString(table, value, condition) {
-        const queryString: string = `SELECT ${value} FROM ${table} WHERE ${condition};`;
-        return queryString;
+    objectionFullQuery = async (conditionArray) => {
+        let queryString = 'this.model.query()';
+        try {
+            for (let condition of conditionArray) {
+                if (condition.value === 'NULL') {
+                    queryString += `.whereNull('${condition.column}')`;
+                } else {
+                    queryString += `.where('${condition.column}', '${condition.operator}', '${condition.value}')`;
+                }
+            }
+            const result = await eval(queryString);
+            return result;
+        } catch(e) {
+            console.log(`====Query string: ${queryString}====`);
+            console.log(e.message);
+        }
     }
-
-    
 }

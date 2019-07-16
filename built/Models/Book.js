@@ -7,11 +7,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 export default class Book {
-    constructor(id, title, author, isbn) {
+    constructor(id, title, author, isbn, embedref) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
+        this.embedref = embedref;
     }
 }
 Book.countAvailableCopies = (bookID) => __awaiter(this, void 0, void 0, function* () {

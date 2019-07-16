@@ -1,3 +1,9 @@
+var CleanCodeEmbedLink = "B001GSTOAM";
+var BibleEmbedLink     = "B005IYICEO";
+
+var iframeStart = '<iframe type="text/html" width="100%" height="100%" frameborder="0" allowfullscreen src="https://read.amazon.co.uk/kp/embed?asin=';
+var iframeEnd   = '&preview=inline&linkCode=kpe&ref_=cm_sw_r_kb_dp_g1jlDbS5J7MS&hideBuy=true&hideShare=true"></iframe>'
+
 function submitSearch() {
     var xhttp = new XMLHttpRequest();
 
@@ -20,28 +26,38 @@ function submitSearch() {
             window.location.reload(true);
         }
         var bookJSON = JSON.parse(xhttp.response);
-        var resultsHTML = createResultsHTML(bookJSON);
-        document.getElementById("results").innerHTML = resultsHTML;
+        createResultsHTML(bookJSON);
+        
     }
     xhttp.send();
 }
 
 function createResultsHTML(bookJSON) {
-    var resultsText = '';
-    resultsText += '<div class="col-md-6"><ul class="list-group">';
-    resultsText += '<li class="list-group-item active h3">Search Results</li>'
+    var bookListHTML = '';
+    bookListHTML += '<div class="col-md-12"><ul class="list-group">';
+    bookListHTML += '<li class="list-group-item active h3">Search Results</li>'
+
+    var bookEmbedHTML = '';
     
     for (var id in bookJSON) {
         var book = bookJSON[id]
-        resultsText += '<li class="list-group-item list-group-item-action">'
-        resultsText += `<b>${book.title}</b>, by <i>${book.author}</i> (ISBN: ${book.isbn})</li>`;
+        bookListHTML += '<li class="list-group-item list-group-item-action">'
+        bookListHTML += `<b>${book.title}</b>, by <i>${book.author}</i> (ISBN: ${book.isbn})</li>`;
+
+        if (book.embedref !== null) {
+            bookEmbedHTML += '<div class="card mx-auto" style="width: 600px; height: 700px; margin-top: 20px">';
+            bookEmbedHTML += '<div class="card-header p-3 mb-2 bg-dark text-white">';
+            bookEmbedHTML += `<p class="card-text">Here's a preview of <b>${book.title}</b></p></div>`;
+            bookEmbedHTML += iframeStart + book.embedref + iframeEnd + '</div>';
+        }
     }
-        
+
     if (bookJSON.length === 0) {
-        resultsText += '<li class="list-group-item list-group-item-action"><b>No books found</b></li>'
+        bookListHTML += '<li class="list-group-item list-group-item-action"><b>No books found</b></li>'
     }
 
-    resultsText += '</ul></div><br>';
-
-    return resultsText;
+    bookListHTML += '</ul></div><br>';
+    
+    document.getElementById("results").innerHTML  = bookListHTML;
+    document.getElementById("previews").innerHTML = bookEmbedHTML;
 }

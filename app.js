@@ -1,51 +1,50 @@
-var express = require('express');
-var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
-require('reflect-metadata');
-const jwt = require('jsonwebtoken')
+var express     = require('express');
+var passport    = require('passport');
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt  = require('passport-jwt').ExtractJwt;
 
-const Queries     = require('./dist/Queries/Queries').default;
-const PassportPG  = require('./dist/PassportPG').default;
-const BookQueries = require('./dist/Queries/BookQueries').default;
-const AuthQueries = require('./dist/Queries/AuthQueries').default;
-const CopyQueries = require('./dist/Queries/CopyQueries').default;
+const PassportPG         = require('./dist/PassportPG').default;
+const BookQueries        = require('./dist/Queries/BookQueries').default;
+const UserQueries        = require('./dist/Queries/UserQueries').default;
+const AuthQueries        = require('./dist/Queries/AuthQueries').default;
+const CopyQueries        = require('./dist/Queries/CopyQueries').default;
+const TransactionQueries = require('./dist/Queries/TransactionQueries').default;
 
-/*
+const Knex       = require('knex');
+const objection  = require('objection');
+const knexConfig = require('./knexfile');
+const knex       = Knex(knexConfig.development);
+objection.Model.knex(knex);
+
+const copyQuery        = new CopyQueries();
+const bookQuery        = new BookQueries();
+const userQuery        = new UserQueries();
+const authQuery        = new AuthQueries();
+const transactionQuery = new TransactionQueries();
+
+
 var app = express();
 app.use(passport.initialize());
 app.use(passport.session());
-*/
 
 
 runner = async () => {
-	const connection = await Queries.createConnection();
-	const copyQuery = new CopyQueries(connection);
+	//const connection = await Queries.createConnection();
+	const copyQuery = new CopyQueries();
+	const bookQuery = new BookQueries();
+	const userQuery = new UserQueries();
+	const authQuery = new AuthQueries();
+	const transactionQuery = new TransactionQueries();
+	
+	const result1 = await bookQuery.getBookByAuthor('B');
+	// const result2 = await transactionQuery.getCurrentUserBooks(1);
+	//const result3 = await bookQuery.getBookDetails(101);
+	//const result4 = await userQuery.getAllUsers();
+	//const result5 = await authQuery.validateCredentials('matmoo', 'qwertcoffee');
 
-	const result = await copyQuery.getAllCopies(101);
-	console.log(result);
+	console.log(result1);
 }
-
-runner()
-
-
-
-
-
-
-
-// && node ./dist/index.js
-
-
-
-
-
-
-
-
-/*
-const db = Queries.createDB()
-const bookQuery = new BookQueries(db);
-const authQuery = new AuthQueries(db);
+//runner()
 
 app.get('/loginrequest/', async (request, response) => {
 
@@ -67,8 +66,6 @@ app.get('/loginrequest/', async (request, response) => {
 	}
 });
 
-var JwtStrategy = require('passport-jwt').Strategy,
-    ExtractJwt = require('passport-jwt').ExtractJwt;
 var opts = {'jwtFromRequest': ExtractJwt.fromAuthHeaderAsBearerToken(),
 			'secretOrKey' : 'our_secret',
 			'usernameField': 'username',
@@ -126,4 +123,3 @@ app.get('/booksearch/', passport.authenticate('jwt'), async (request, response) 
 app.use(express.static('dist/frontend'));
 
 app.listen(3000, () => console.log(`Example app listening on port 3000!`))
-*/
